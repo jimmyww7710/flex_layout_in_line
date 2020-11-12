@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box
+        }
+
+        .wrapper {
+            max-width: 1440px;
+            /* height: 500px; */
+            margin: 50px auto;
+            background-color: burlywood;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .item {
+            background-color: tomato;
+            width: calc((100% - 60px)/4);
+            margin: 5px;
+        }
+
+        .item.three-in-line {
+            width: calc((100% - 60px)/3);
+        }
+
+        .item.two-in-line {
+            width: calc((100% - 60px)/2);
+        }
+
+        /* .item > div {
+            background: yellow;
+        } */
+
+
+
+        @media only screen and (max-width: 1200px) {
+
+            .item.three-in-line-1200 {
+                width: calc((100% - 60px)/3);
+            }
+
+            .item.two-in-line-1200 {
+                width: calc((100% - 60px)/2);
+            }
+
+            .add-margin-left-1200 {
+                margin-left: 50px;
+            }
+
+            .add-margin-right-1200 {
+                margin-right: 50px;
+            }
+        }
+
+        @media only screen and (max-width: 991px) {
+
+            .item.two-in-line-991 {
+                width: calc((100% - 60px)/2);
+            }
+
+            .add-margin-left-991 {
+                margin-left: 50px;
+            }
+
+            .add-margin-right-991 {
+                margin-right: 50px;
+            }
+
+            /*可以在1200用 CALC計算*/
+            .add-margin-left-1200 {
+                margin-left: 5px;
+            }
+
+            .add-margin-right-1200 {
+                margin-right: 5px;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+
+            .item.one-in-line-768 {
+                width: calc((100% - 60px)/1);
+            }
+
+            .add-margin-left,
+            .add-margin-right {
+                margin-left: 0px;
+                margin-right: 0px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align: center;width: 100%;padding:20px;">
+        <h2>填入顆數後，點擊按鈕</h2><br>
+        <input type="text" id="custom-number" value="7"></input>
+        <button id="apply">重新排列</button>
+    </div>
+   
+    <div class="wrapper build">
+    </div>
+
+    <script>
+        // 除以 2 , 3  ,4 沒有餘數
+        // 除以解析度定的一排顆數，
+        // 倒數兩排如果是4=> 2*2
+
+        $(document).ready(function () {
+            var customNumber = parseInt($("#custom-number").val());
+            getLayout();
+            $("#apply").click(function () {
+             
+                $(".item").remove();
+                getLayout();
+                // }, 0);
+            });
+           
+            function getLayout () {
+                console.log("getLayout");
+                var lineItems = {
+                widthLg: [],
+                widthMd: [],
+                widthSm: [],
+                widthXs: []
+            }
+
+            customNumber = parseInt($("#custom-number").val());
+            // var classSetting = "";
+            // var list = [];
+            var IteminLine = function (index) {
+                var result;
+                var remainder;
+                var item;
+                var getDivideDivisor = function (divisor) {
+                    item = Math.floor(index / divisor);
+                    if ((index) % 4 == 0 && divisor >= 4) {
+                        result = new Array(index / 4).fill(4);
+                    }
+                    else if ((index) % 3 == 0 && divisor >= 3) {
+                        result = new Array(index / 3).fill(3);
+                    }
+                    else {
+                        remainder = index % divisor;
+                        result = new Array(item).fill(divisor);
+                        result.push(remainder);
+
+
+                        if (result[result.length - 2] !== 2 && remainder == 1) {
+                            result[result.length - 2]--;
+                            result[result.length - 1]++;
+                        }
+                        else {
+
+
+                        }
+
+                    }
+
+                    return result;
+                }
+                lineItems.widthLg = getDivideDivisor(4);
+                lineItems.widthMd = getDivideDivisor(3);
+            };
+
+            IteminLine(customNumber);
+            var template = "";
+            for (let index = 0; index < customNumber; index++) {
+                template = template + "<div class='item two-in-line-991 one-in-line-768'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>";
+            }
+            $(".build").append(template);
+
+            if (lineItems.widthLg[0] == 3) {
+                $(".wrapper .item").addClass("three-in-line");
+                // addclass three-in-line
+            }
+
+
+            if (lineItems.widthMd[0] == 3) {
+                $(".wrapper .item").addClass("three-in-line-1200");
+                function SumDatareduce(arr) {
+                    return (arr.length > 1) ? arr.reduce((a, b) => a + b) : arr[0];
+                }
+                for (let index = 0; index < lineItems.widthMd.length; index++) {
+                    if (lineItems.widthMd[index] == 2) { //  找到2
+                        $(".wrapper .item").eq(SumDatareduce(lineItems.widthMd.slice(0, index))).addClass("add-margin-left-1200");
+                        $(".wrapper .item").eq(SumDatareduce(lineItems.widthMd.slice(0, index)) + 1).addClass("add-margin-right-1200");
+                    }
+                }
+            }
+            }
+            
+        });   
+    </script>
+</body>
+
+</html>
