@@ -38,9 +38,6 @@
             width: calc((100% - 60px)/2);
         }
 
-        /* .item > div {
-            background: yellow;
-        } */
 
 
 
@@ -108,7 +105,7 @@
         <input type="text" id="custom-number" value="7"></input>
         <button id="apply">重新排列</button>
     </div>
-   
+
     <div class="wrapper build">
     </div>
 
@@ -121,86 +118,78 @@
             var customNumber = parseInt($("#custom-number").val());
             getLayout();
             $("#apply").click(function () {
-             
+
                 $(".item").remove();
                 getLayout();
-                // }, 0);
             });
-           
-            function getLayout () {
-                console.log("getLayout");
+
+            function getLayout() {
                 var lineItems = {
-                widthLg: [],
-                widthMd: [],
-                widthSm: [],
-                widthXs: []
-            }
+                    widthLg: [],
+                    widthMd: [],
+                    widthSm: [],
+                    widthXs: []
+                }
 
-            customNumber = parseInt($("#custom-number").val());
-            // var classSetting = "";
-            // var list = [];
-            var IteminLine = function (index) {
-                var result;
-                var remainder;
-                var item;
-                var getDivideDivisor = function (divisor) {
-                    item = Math.floor(index / divisor);
-                    if ((index) % 4 == 0 && divisor >= 4) {
-                        result = new Array(index / 4).fill(4);
-                    }
-                    else if ((index) % 3 == 0 && divisor >= 3) {
-                        result = new Array(index / 3).fill(3);
-                    }
-                    else {
-                        remainder = index % divisor;
-                        result = new Array(item).fill(divisor);
-                        result.push(remainder);
-
-
-                        if (result[result.length - 2] !== 2 && remainder == 1) {
-                            result[result.length - 2]--;
-                            result[result.length - 1]++;
+                customNumber = parseInt($("#custom-number").val());
+                var IteminLine = function (customNumber) {
+                    var result;
+                    var remainder;
+                    var groups;
+                    var getDivideDivisor = function (divisor) {
+                        groups = Math.floor(customNumber / divisor);
+                        if ((customNumber) % 4 == 0 && divisor >= 4) {
+                            result = new Array(customNumber / 4).fill(4);
+                        }
+                        else if ((customNumber) % 3 == 0 && divisor >= 3) {
+                            result = new Array(customNumber / 3).fill(3);
                         }
                         else {
+                            remainder = customNumber % divisor;
+                            result = new Array(groups).fill(divisor);
+                            result.push(remainder);
 
+
+                            if (result[result.length - 2] !== 2 && remainder == 1) {
+                                result[result.length - 2]--;
+                                result[result.length - 1]++;
+                            }
 
                         }
 
+                        return result;
                     }
+                    lineItems.widthLg = getDivideDivisor(4);
+                    lineItems.widthMd = getDivideDivisor(3);
+                };
 
-                    return result;
+                IteminLine(customNumber);
+                var template = "";
+                for (let index = 0; index < customNumber; index++) {
+                    template = template + "<div class='item two-in-line-991 one-in-line-768'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>";
                 }
-                lineItems.widthLg = getDivideDivisor(4);
-                lineItems.widthMd = getDivideDivisor(3);
-            };
+                $(".build").append(template);
 
-            IteminLine(customNumber);
-            var template = "";
-            for (let index = 0; index < customNumber; index++) {
-                template = template + "<div class='item two-in-line-991 one-in-line-768'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>";
-            }
-            $(".build").append(template);
-
-            if (lineItems.widthLg[0] == 3) {
-                $(".wrapper .item").addClass("three-in-line");
-                // addclass three-in-line
-            }
-
-
-            if (lineItems.widthMd[0] == 3) {
-                $(".wrapper .item").addClass("three-in-line-1200");
-                function SumDatareduce(arr) {
-                    return (arr.length > 1) ? arr.reduce((a, b) => a + b) : arr[0];
+                if (lineItems.widthLg[0] == 3) {
+                    $(".wrapper .item").addClass("three-in-line");
+                    // addclass three-in-line
                 }
-                for (let index = 0; index < lineItems.widthMd.length; index++) {
-                    if (lineItems.widthMd[index] == 2) { //  找到2
-                        $(".wrapper .item").eq(SumDatareduce(lineItems.widthMd.slice(0, index))).addClass("add-margin-left-1200");
-                        $(".wrapper .item").eq(SumDatareduce(lineItems.widthMd.slice(0, index)) + 1).addClass("add-margin-right-1200");
+
+
+                if (lineItems.widthMd[0] == 3) {
+                    $(".wrapper .item").addClass("three-in-line-1200");
+                    function SumDatareduce(arr) {
+                        return (arr.length > 1) ? arr.reduce((a, b) => a + b) : arr[0];
+                    }
+                    for (let index = 0; index < lineItems.widthMd.length; index++) {
+                        if (lineItems.widthMd[index] == 2) { //  找到2
+                            $(".wrapper .item").eq(SumDatareduce(lineItems.widthMd.slice(0, index))).addClass("add-margin-left-1200");
+                            $(".wrapper .item").eq(SumDatareduce(lineItems.widthMd.slice(0, index)) + 1).addClass("add-margin-right-1200");
+                        }
                     }
                 }
             }
-            }
-            
+
         });   
     </script>
 </body>
